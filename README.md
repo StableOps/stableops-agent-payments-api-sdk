@@ -54,7 +54,6 @@ import { StableOpsAgentPayments } from '@stableops/agent-payments-api-sdk'
 
 const payments = new StableOpsAgentPayments({
   apiKey: process.env.STABLEOPS_API_KEY!,
-  environment: 'sandbox',
 })
 
 const agent = await payments.agents.create({
@@ -69,6 +68,9 @@ const credential = await payments.agents.createKey(agent.id, {
 // The plaintext Agent Key is returned only once. Store it in a secret manager.
 console.log(credential.secret)
 ```
+
+The API key determines the environment, so no separate environment option is
+needed. This matches the initialization convention used by `@stableops/api-sdk`.
 
 The client exposes separate resources for each management area:
 

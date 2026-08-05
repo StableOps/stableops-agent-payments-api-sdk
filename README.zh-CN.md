@@ -48,7 +48,6 @@ import { StableOpsAgentPayments } from '@stableops/agent-payments-api-sdk'
 
 const payments = new StableOpsAgentPayments({
   apiKey: process.env.STABLEOPS_API_KEY!,
-  environment: 'sandbox',
 })
 
 const agent = await payments.agents.create({
@@ -63,6 +62,8 @@ const credential = await payments.agents.createKey(agent.id, {
 // 明文代理密钥只会返回一次，应将其保存到密钥管理服务。
 console.log(credential.secret)
 ```
+
+环境由 API Key 决定，无需额外配置；此初始化方式与 `@stableops/api-sdk` 保持一致。
 
 客户端按管理领域提供独立资源：
 
