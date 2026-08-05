@@ -69,8 +69,8 @@ const credential = await payments.agents.createKey(agent.id, {
 console.log(credential.secret)
 ```
 
-The API key determines the environment, so no separate environment option is
-needed. This matches the initialization convention used by `@stableops/api-sdk`.
+The API key scopes requests to its organization and environment, so no separate
+environment option is required.
 
 The client exposes separate resources for each management area:
 

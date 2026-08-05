@@ -63,7 +63,7 @@ const credential = await payments.agents.createKey(agent.id, {
 console.log(credential.secret)
 ```
 
-环境由 API Key 决定，无需额外配置；此初始化方式与 `@stableops/api-sdk` 保持一致。
+API Key 会把请求限定在其所属的组织和环境，无需另行选择环境。
 
 客户端按管理领域提供独立资源：
 
