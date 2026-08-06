@@ -110,9 +110,10 @@ examples, see the official documentation:
 
 ## Current Support
 
-The Private Alpha starts with the Sandbox environment, Base Sepolia, official
-test USDC, and x402 v2 `exact`. Mainnet and real-fund operation remain gated by
-the StableOps Mainnet launch requirements.
+The current release supports configured USDC and x402 v2 `exact` across six
+EVM mainnets and their testnets, plus Solana mainnet and Devnet. Sandbox only
+accepts test networks, while Live only accepts mainnets and remains subject to
+StableOps organization risk controls. TRON and Nile are not yet supported.
 
 Use `@stableops/agent-sdk` in the agent runtime and
 `@stableops/agent-signer` in the customer-controlled signing environment.

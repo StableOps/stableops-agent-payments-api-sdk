@@ -98,7 +98,7 @@ await dashboard.approvals.approve('approval_...', '已批准的业务采购')
 
 ## 当前支持范围
 
-私测阶段从沙盒环境、Base Sepolia、官方测试 USDC 和 x402 v2 `exact` 开始。主网和真实资金操作仍受 StableOps 主网上线要求约束。
+当前版本支持六个 EVM 主网及其对应测试网，以及 Solana 主网和 Devnet 上已配置的 USDC 与 x402 v2 `exact`。沙盒只能使用测试网，正式环境只能使用主网；正式环境的真实资金操作仍受 StableOps 组织风控门禁约束。TRON 和 Nile 暂不支持。
 
 代理运行时应使用 `@stableops/agent-sdk`，客户自主管理的签名环境应使用 `@stableops/agent-signer`。
 

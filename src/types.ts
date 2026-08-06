@@ -1,4 +1,19 @@
 export type PaymentAgentStatus = 'active' | 'paused' | 'disabled'
+export type AgentPaymentNetwork =
+  | 'eip155:1'
+  | 'eip155:8453'
+  | 'eip155:42161'
+  | 'eip155:137'
+  | 'eip155:10'
+  | 'eip155:56'
+  | 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'
+  | 'eip155:11155111'
+  | 'eip155:84532'
+  | 'eip155:421614'
+  | 'eip155:80002'
+  | 'eip155:11155420'
+  | 'eip155:97'
+  | 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1'
 export type AgentPaymentStatus =
   | 'created'
   | 'awaiting_approval'
@@ -42,7 +57,7 @@ export type AgentCredential = {
 
 export type AgentWallet = {
   id: string
-  network: string
+  network: AgentPaymentNetwork
   address: string
   signerType: 'LOCAL_TEST' | 'AWS_KMS'
   signerKeyId: string
@@ -55,7 +70,7 @@ export type AgentWallet = {
 export type AgentWalletPairingChallenge = {
   challengeId: string
   address: string
-  network: string
+  network: AgentPaymentNetwork
   message: string
   expiresAt: string
 }
@@ -64,13 +79,13 @@ export type AgentWalletBinding = {
   id: string
   paymentAgentId: string
   agentWalletId: string
-  network: string
+  network: AgentPaymentNetwork
   isDefault: boolean
   createdAt: string
 }
 
 export type SpendingPolicyDocument = {
-  network: 'eip155:84532'
+  network: AgentPaymentNetwork
   asset: {
     symbol: 'USDC'
     contractAddress: string

@@ -177,7 +177,7 @@ export class AgentWalletsApi {
   constructor(private readonly http: AgentPaymentsHttpClient) {}
 
   async createPairingChallenge(input: {
-    network: 'eip155:84532'
+    network: import('./types').AgentPaymentNetwork
     address: string
   }): Promise<AgentWalletPairingChallenge> {
     const wire = await this.http.request<WireWalletChallenge>({
@@ -224,7 +224,7 @@ export class AgentWalletsApi {
 
   async bind(
     agentId: string,
-    input: { agentWalletId: string; network: 'eip155:84532' },
+    input: { agentWalletId: string; network: import('./types').AgentPaymentNetwork },
   ): Promise<AgentWalletBinding> {
     const wire = await this.http.request<WireWalletBinding>({
       method: 'POST',
@@ -415,7 +415,7 @@ type WireAgentCredential = {
 
 type WireAgentWallet = {
   id: string
-  network: string
+  network: import('./types').AgentPaymentNetwork
   address: string
   signer_type: AgentWallet['signerType']
   signer_key_id: string
@@ -428,7 +428,7 @@ type WireAgentWallet = {
 type WireWalletChallenge = {
   challenge_id: string
   address: string
-  network: string
+  network: import('./types').AgentPaymentNetwork
   message: string
   expires_at: string
 }
@@ -437,13 +437,13 @@ type WireWalletBinding = {
   id: string
   payment_agent_id: string
   agent_wallet_id: string
-  network: string
+  network: import('./types').AgentPaymentNetwork
   is_default: boolean
   created_at: string
 }
 
 type WireSpendingPolicyDocument = {
-  network: 'eip155:84532'
+  network: import('./types').AgentPaymentNetwork
   asset: { symbol: 'USDC'; contract_address: string }
   allowed_origins: string[]
   allowed_pay_to: string[]
