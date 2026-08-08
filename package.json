@@ -1,6 +1,6 @@
 {
   "name": "@stableops/agent-payments-api-sdk",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "description": "Management API SDK for StableOps Agent Payments.",
   "keywords": [
