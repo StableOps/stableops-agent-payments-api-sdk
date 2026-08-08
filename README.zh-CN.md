@@ -24,7 +24,7 @@ StableOps Agent Payments 是面向自主代理的付款控制层，通过不可�
 
 - Node.js 20 或更高版本。
 - StableOps 组织。
-- 用于管理和查询操作的组织 API Key，或用于控制台审批流程且已验证的 Clerk 组织管理员访问令牌。
+- 用于管理和查询操作的组织 API Key，或来自当前 StableOps 控制台组织管理员会话的短时访问令牌。
 - 服务端运行环境。不要把任何一种凭证暴露给代理或打包到浏览器代码中。
 
 ## 安装
@@ -46,8 +46,14 @@ yarn add @stableops/agent-payments-api-sdk
 ```ts
 import { StableOpsAgentPayments } from '@stableops/agent-payments-api-sdk'
 
+function required(name: string): string {
+  const value = process.env[name]?.trim()
+  if (!value) throw new Error(`缺少环境变量 ${name}`)
+  return value
+}
+
 const payments = new StableOpsAgentPayments({
-  apiKey: process.env.STABLEOPS_API_KEY!,
+  apiKey: required('STABLEOPS_API_KEY'),
 })
 
 const agent = await payments.agents.create({
@@ -81,18 +87,19 @@ const recentPayments = await payments.payments.list()
 
 例如，BNB Smart Chain 上的 1 USDC 在支付记录中是 `1000000000000000000`，但在策略限额或日预算中仍是 `1000000`。不要在未换算为 6 位预算单位前，把支付金额直接复制到策略中。
 
-审批操作可以使用另一个客户端，并配置已验证的 Clerk 组织管理员访问令牌：
+审批操作应优先在 StableOps 控制台完成。已经接入 StableOps 登录态的控制台代码可以使用当前组织管理员会话的短时访问令牌，但不能把它保存为环境变量或长期凭证：
 
 ```ts
-const dashboard = new StableOpsAgentPayments({
-  accessToken: process.env.STABLEOPS_ADMIN_ACCESS_TOKEN!,
-  environment: 'sandbox',
-})
-
-await dashboard.approvals.approve('approval_...', '已批准的业务采购')
+async function approveFromDashboardSession(accessToken: string) {
+  const dashboard = new StableOpsAgentPayments({
+    accessToken,
+    environment: 'sandbox',
+  })
+  await dashboard.approvals.approve('approval_...', '已批准的业务采购')
+}
 ```
 
-使用访问令牌的客户端会自动切换到隔离的 `/v1/dashboard/agent-payments/*` 命名空间，且不会把管理员令牌作为 API Key Bearer 发送。不能在同一个客户端中同时配置 `apiKey` 和 `accessToken`。
+使用访问令牌的客户端会自动切换到隔离的 `/v1/dashboard/agent-payments/*` 命名空间，且不会把管理员令牌作为 API Key Bearer 发送。不能在同一个客户端中同时配置 `apiKey` 和 `accessToken`，也不能缓存管理员访问令牌或把它交给代理运行时。
 
 ## 官方文档
 

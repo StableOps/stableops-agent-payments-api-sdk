@@ -29,8 +29,8 @@ agent runtime.
 
 - Node.js 20 or newer.
 - A StableOps organization.
-- An organization API key for management and query operations, or a verified
-  Clerk organization-administrator access token for dashboard approval flows.
+- An organization API key for management and query operations, or a short-lived
+  access token from the current StableOps dashboard organization-administrator session.
 - A server-side environment. Do not expose either credential to an agent or browser bundle.
 
 ## Installation
@@ -52,8 +52,14 @@ yarn add @stableops/agent-payments-api-sdk
 ```ts
 import { StableOpsAgentPayments } from '@stableops/agent-payments-api-sdk'
 
+function required(name: string): string {
+  const value = process.env[name]?.trim()
+  if (!value) throw new Error(`Missing environment variable ${name}`)
+  return value
+}
+
 const payments = new StableOpsAgentPayments({
-  apiKey: process.env.STABLEOPS_API_KEY!,
+  apiKey: required('STABLEOPS_API_KEY'),
 })
 
 const agent = await payments.agents.create({
@@ -94,22 +100,25 @@ record but `1000000` in a policy limit or daily budget. Do not copy a payment
 amount directly into a policy without converting it to the six-decimal budget
 unit.
 
-Approval decisions can use a separate client configured with a verified Clerk
-organization-administrator access token:
+Prefer the StableOps console for approval decisions. Console code that already has
+a StableOps sign-in session can use the current organization administrator's
+short-lived access token, but must not store it as an environment secret or
+long-lived credential:
 
 ```ts
-const dashboard = new StableOpsAgentPayments({
-  accessToken: process.env.STABLEOPS_ADMIN_ACCESS_TOKEN!,
-  environment: 'sandbox',
-})
-
-await dashboard.approvals.approve('approval_...', 'Approved business purchase')
+async function approveFromDashboardSession(accessToken: string) {
+  const dashboard = new StableOpsAgentPayments({
+    accessToken,
+    environment: 'sandbox',
+  })
+  await dashboard.approvals.approve('approval_...', 'Approved business purchase')
+}
 ```
 
 The access-token client automatically uses the isolated
 `/v1/dashboard/agent-payments/*` namespace and never sends the administrator
 token as an API-key bearer token. Do not configure `apiKey` and `accessToken` on
-the same client.
+the same client, cache the administrator token, or give it to the agent runtime.
 
 ## Documentation
 
