@@ -75,6 +75,12 @@ const approvals = await payments.approvals.list()
 const recentPayments = await payments.payments.list()
 ```
 
+## 金额单位
+
+策略阈值和全部预算始终使用 6 位 USDC 预算单位，因此所有网络上的 `1000000` 都表示 1 USDC。支付、审批和回执金额使用链上资产最小单位，并通过 `assetDecimals` 返回位数。BNB Smart Chain 及其测试网为 18 位，其它当前支持网络为 6 位。
+
+例如，BNB Smart Chain 上的 1 USDC 在支付记录中是 `1000000000000000000`，但在策略限额或日预算中仍是 `1000000`。不要在未换算为 6 位预算单位前，把支付金额直接复制到策略中。
+
 审批操作可以使用另一个客户端，并配置已验证的 Clerk 组织管理员访问令牌：
 
 ```ts
@@ -98,7 +104,7 @@ await dashboard.approvals.approve('approval_...', '已批准的业务采购')
 
 ## 当前支持范围
 
-当前版本支持六个 EVM 主网及其对应测试网，以及 Solana 主网和 Devnet 上已配置的 USDC 与 x402 v2 `exact`。沙盒只能使用测试网，正式环境只能使用主网；正式环境的真实资金操作仍受 StableOps 组织风控门禁约束。TRON 和 Nile 暂不支持。
+当前版本支持六个 EVM 主网及其对应测试网，以及 Solana 主网和 Devnet 上已配置的 USDC 与 x402 v2 `exact`。沙盒只能使用测试网；正式环境支持主网，组织完成风控与恢复演练门禁后由 StableOps 开通。TRON 和 Nile 暂不支持。
 
 代理运行时应使用 `@stableops/agent-sdk`，客户自主管理的签名环境应使用 `@stableops/agent-signer`。
 

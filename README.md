@@ -82,6 +82,18 @@ const approvals = await payments.approvals.list()
 const recentPayments = await payments.payments.list()
 ```
 
+## Amount units
+
+Policy thresholds and all budgets always use a six-decimal USDC budget unit, so
+`1000000` means 1 USDC on every network. Payment, approval, and receipt amounts
+use the onchain token's atomic unit and include `assetDecimals`. BNB Smart Chain
+and its testnet use 18 decimals; the other currently supported networks use 6.
+
+For example, 1 USDC on BNB Smart Chain is `1000000000000000000` in a payment
+record but `1000000` in a policy limit or daily budget. Do not copy a payment
+amount directly into a policy without converting it to the six-decimal budget
+unit.
+
 Approval decisions can use a separate client configured with a verified Clerk
 organization-administrator access token:
 
@@ -112,8 +124,9 @@ examples, see the official documentation:
 
 The current release supports configured USDC and x402 v2 `exact` across six
 EVM mainnets and their testnets, plus Solana mainnet and Devnet. Sandbox only
-accepts test networks, while Live only accepts mainnets and remains subject to
-StableOps organization risk controls. TRON and Nile are not yet supported.
+accepts test networks, while Live supports mainnets after StableOps enables the
+organization upon completion of its risk and recovery-drill gates. TRON and Nile
+are not yet supported.
 
 Use `@stableops/agent-sdk` in the agent runtime and
 `@stableops/agent-signer` in the customer-controlled signing environment.
